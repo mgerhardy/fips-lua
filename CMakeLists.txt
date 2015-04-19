@@ -41,7 +41,12 @@ fips_begin_lib(lua)
         lvm.c lvm.h
         lzio.c lzio.h
     )
+
     if (FIPS_LINUX)
+        find_library(DL_LIBRARY NAMES dl)
+        if (DL_LIBRARY)
+            fips_libs(${DL_LIBRARY})
+        endif()
         add_definitions("-DLUA_USE_LINUX")
     elseif(FIPS_MACOS)
         add_definitions("-DLUA_USE_MACOSX")
