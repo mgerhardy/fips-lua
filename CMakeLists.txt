@@ -6,7 +6,8 @@ if (NOT FIPS_IMPORT)
     fips_project(fips-lua)
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/lua/cmake")
+get_filename_component(MODULE_ABS_DIR "./lua/cmake" ABSOLUTE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MODULE_ABS_DIR}")
 
 ## CONFIGURATION
 # Default configuration (we assume POSIX by default)
@@ -68,16 +69,14 @@ endif()
 
 ## SETUP
 # Optional libraries
-if (NOT FIPS_IMPORT)
-    find_package(Readline)
-    if (READLINE_FOUND)
-        option(LUA_USE_READLINE "Use readline in the Lua CLI." ON)
-    endif()
+find_package(Readline)
+if (READLINE_FOUND)
+    option(LUA_USE_READLINE "Use readline in the Lua CLI." ON)
+endif()
 
-    find_package(Curses)
-    if (CURSES_FOUND)
-        option(LUA_USE_CURSES "Use curses in the Lua CLI." ON)
-    endif()
+find_package(Curses)
+if (CURSES_FOUND)
+    option(LUA_USE_CURSES "Use curses in the Lua CLI." ON)
 endif()
 
 # Setup needed variables and libraries
@@ -146,8 +145,7 @@ fips_begin_lib(lua52)
         ltable.c ltable.h
         ltablib.c
         ltm.c ltm.h
-        luac.c luaconf.h
-        lua.c lua.h lua.hpp
+        luaconf.h
         lualib.h lundump.c
         lundump.h
         lvm.c lvm.h
@@ -167,15 +165,15 @@ if (FIPS_MACOS OR FIPS_LINUX OR FIPS_WINDOWS)
     fips_begin_app(luac cmdline)
         fips_dir(lua/src)
         fips_files(luac.c luac.rc)
-        fips_deps(lua52)
         fips_libs(${LIBS})
+        fips_deps(lua52)
     fips_end_app()
 
     fips_begin_app(lua cmdline)
         fips_dir(lua/src)
         fips_files(lua.c lua.rc)
-        fips_deps(lua52)
         fips_libs(${LIBS})
+        fips_deps(lua52)
     fips_end_app()
 endif()
 
